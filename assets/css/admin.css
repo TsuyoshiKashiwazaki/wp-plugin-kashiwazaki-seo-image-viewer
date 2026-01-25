@@ -1,0 +1,313 @@
+/**
+ * Kashiwazaki SEO Image Viewer - Admin CSS
+ */
+
+/* 設定ページ */
+.ksiv-settings-wrap {
+    max-width: 1200px;
+}
+
+.ksiv-settings-wrap h1 {
+    margin-bottom: 20px;
+}
+
+.ksiv-settings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.ksiv-settings-section {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px 24px;
+}
+
+.ksiv-settings-section h2 {
+    margin: 0 0 16px;
+    padding: 0 0 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ksiv-settings-section .form-table {
+    margin-top: 0;
+}
+
+.ksiv-settings-section .form-table th {
+    padding: 12px 10px 12px 0;
+    width: 250px;
+}
+
+.ksiv-settings-section .form-table td {
+    padding: 12px 10px;
+}
+
+.ksiv-settings-section .description {
+    color: #666;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.ksiv-settings-section textarea.code {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+}
+
+/* メタボックス */
+.ksiv-meta-box {
+    padding: 10px 0;
+}
+
+.ksiv-no-images {
+    color: #666;
+    font-style: italic;
+}
+
+/* スコア表示 */
+.ksiv-score-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.ksiv-score-circle {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(
+        var(--score-color, #ccc) calc(var(--score, 0) * 3.6deg),
+        #e0e0e0 calc(var(--score, 0) * 3.6deg)
+    );
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ksiv-score-circle::before {
+    content: '';
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.ksiv-score-value {
+    position: relative;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    color: #333;
+}
+
+.ksiv-score-label {
+    position: relative;
+    font-size: 12px;
+    color: #666;
+}
+
+.ksiv-score-info {
+    flex: 1;
+}
+
+.ksiv-score-grade {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.ksiv-image-count {
+    color: #666;
+    font-size: 14px;
+}
+
+/* 問題セクション */
+.ksiv-issue-section {
+    margin-bottom: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.ksiv-issue-section h4 {
+    margin: 0;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.ksiv-issue-error h4 {
+    background: #fdecea;
+    color: #c62828;
+}
+
+.ksiv-issue-warning h4 {
+    background: #fff8e1;
+    color: #ef6c00;
+}
+
+.ksiv-issue-info h4 {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.ksiv-issue-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px;
+    background: #fafafa;
+}
+
+.ksiv-issue-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    text-align: center;
+}
+
+.ksiv-issue-image img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background: #fff;
+}
+
+.ksiv-no-thumbnail {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #999;
+    text-align: center;
+    padding: 8px;
+}
+
+.ksiv-filename {
+    display: block;
+    margin-top: 6px;
+    font-size: 11px;
+    color: #333;
+    word-break: break-all;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ksiv-issue-detail {
+    display: block;
+    margin-top: 4px;
+    font-size: 10px;
+    color: #666;
+    word-break: break-all;
+}
+
+.ksiv-all-good {
+    color: #2e7d32;
+    font-weight: 500;
+    padding: 12px;
+    background: #e8f5e9;
+    border-radius: 6px;
+    text-align: center;
+}
+
+/* 投稿一覧のスコア表示 */
+.column-ksiv_score {
+    width: 80px;
+    text-align: center;
+}
+
+.ksiv-list-score {
+    display: inline-block;
+    min-width: 36px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+}
+
+.ksiv-list-score.ksiv-no-images {
+    background: #9e9e9e;
+    color: #fff;
+    font-style: normal;
+}
+
+/* レスポンシブ */
+@media screen and (max-width: 782px) {
+    .ksiv-settings-section .form-table th {
+        width: auto;
+        display: block;
+        padding-bottom: 4px;
+    }
+
+    .ksiv-settings-section .form-table td {
+        display: block;
+        padding-top: 0;
+    }
+
+    .ksiv-score-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .ksiv-issue-images {
+        justify-content: center;
+    }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+    .ksiv-settings-section {
+        background: #1e1e1e;
+        border-color: #3c3c3c;
+    }
+
+    .ksiv-settings-section h2 {
+        border-color: #3c3c3c;
+    }
+
+    .ksiv-score-container {
+        background: #2a2a2a;
+    }
+
+    .ksiv-score-circle::before {
+        background: #1e1e1e;
+    }
+
+    .ksiv-score-value {
+        color: #fff;
+    }
+
+    .ksiv-issue-images {
+        background: #2a2a2a;
+    }
+
+    .ksiv-issue-section {
+        border-color: #3c3c3c;
+    }
+
+    .ksiv-issue-section h4 {
+        border-color: #3c3c3c;
+    }
+}

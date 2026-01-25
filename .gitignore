@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Package files
+package.json
+package-lock.json
+composer.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test files
+test-*.js
+test-*.php
+tests/
+
+# Build
+dist/
+build/
+
+# Logs
+*.log
+debug.log
+
+# Local config
+.env
+.env.local
+wp-config-local.php
+
+# Claude files
+CLAUDE.md
+claude.md
+
+# Playwright screenshots
+.playwright-mcp/

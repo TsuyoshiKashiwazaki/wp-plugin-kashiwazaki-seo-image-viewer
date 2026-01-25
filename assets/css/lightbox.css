@@ -1,0 +1,573 @@
+/**
+ * Kashiwazaki SEO Image Viewer - Lightbox CSS
+ */
+
+/* ベースリセット */
+.ksiv-lightbox *,
+.ksiv-lightbox *::before,
+.ksiv-lightbox *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Lightbox コンテナ */
+.ksiv-lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999999;
+    display: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #fff;
+}
+
+.ksiv-lightbox.is-active {
+    display: block;
+}
+
+.ksiv-lightbox.is-visible .ksiv-lightbox-overlay {
+    opacity: 1;
+}
+
+.ksiv-lightbox.is-visible .ksiv-lightbox-container {
+    opacity: 1;
+}
+
+/* オーバーレイ */
+.ksiv-lightbox-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* メインコンテナ */
+.ksiv-lightbox-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* ヘッダー */
+.ksiv-lightbox-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+    z-index: 10;
+}
+
+/* カウンター */
+.ksiv-lightbox-counter {
+    font-size: 16px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.ksiv-lightbox-separator {
+    margin: 0 4px;
+    opacity: 0.7;
+}
+
+/* アクションボタン群 */
+.ksiv-lightbox-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* ボタン共通スタイル */
+.ksiv-lightbox-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.ksiv-lightbox-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.ksiv-lightbox-btn:active {
+    transform: scale(0.95);
+}
+
+.ksiv-lightbox-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* 情報パネルトグルボタン（アクティブ状態） */
+.ksiv-lightbox-info-toggle.is-active {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* メインコンテンツエリア */
+.ksiv-lightbox-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 80px 60px;
+    overflow: hidden;
+}
+
+/* ナビゲーションボタン */
+.ksiv-lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, opacity 0.2s ease;
+    z-index: 10;
+}
+
+.ksiv-lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.ksiv-lightbox-nav:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.ksiv-lightbox-nav:disabled:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.ksiv-lightbox-prev {
+    left: 10px;
+}
+
+.ksiv-lightbox-next {
+    right: 10px;
+}
+
+.ksiv-lightbox-nav svg {
+    width: 40px;
+    height: 40px;
+}
+
+/* 画像ラッパー */
+.ksiv-lightbox-image-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: calc(100% - 120px);
+    max-height: 100%;
+    overflow: hidden;
+}
+
+/* 画像コンテナ */
+.ksiv-lightbox-image-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    max-height: 100%;
+    cursor: grab;
+    overflow: hidden;
+}
+
+.ksiv-lightbox-image-container.is-dragging {
+    cursor: grabbing;
+}
+
+.ksiv-lightbox-image-container.is-zoomed {
+    cursor: grab;
+}
+
+/* 画像 */
+.ksiv-lightbox-image {
+    max-width: 100%;
+    max-height: calc(100vh - 160px);
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+    transition: transform 0.1s ease-out, opacity 0.3s ease;
+    transform-origin: center center;
+}
+
+.ksiv-lightbox-image.is-loading {
+    opacity: 0;
+}
+
+/* ローディング */
+.ksiv-lightbox-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.ksiv-lightbox-loading.is-active {
+    display: block;
+}
+
+.ksiv-lightbox-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: ksiv-spin 0.8s linear infinite;
+}
+
+@keyframes ksiv-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 画像情報パネル */
+.ksiv-lightbox-info-panel {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 12px;
+    padding: 16px 20px;
+    min-width: 320px;
+    max-width: 90%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.ksiv-lightbox-info-panel.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.ksiv-lightbox-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ksiv-lightbox-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.ksiv-lightbox-info-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ksiv-lightbox-info-value {
+    color: #fff;
+    font-size: 13px;
+    text-align: right;
+    word-break: break-all;
+}
+
+.ksiv-lightbox-info-value.is-warning {
+    color: #ff9800;
+}
+
+/* URL行 */
+.ksiv-lightbox-info-url-row {
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ksiv-lightbox-info-url-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    border-radius: 6px;
+    position: relative;
+}
+
+.ksiv-info-url {
+    flex: 1;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.ksiv-lightbox-copy-url {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.ksiv-lightbox-copy-url:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.ksiv-lightbox-copy-feedback {
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #4caf50;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.ksiv-lightbox-copy-feedback.is-visible {
+    opacity: 1;
+}
+
+/* ズームコントロール */
+.ksiv-lightbox-zoom-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 8px 12px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.ksiv-lightbox-zoom-controls .ksiv-lightbox-btn {
+    width: 36px;
+    height: 36px;
+}
+
+.ksiv-lightbox-zoom-controls .ksiv-lightbox-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.ksiv-lightbox-zoom-level {
+    min-width: 50px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* 画像の拡大アイコン（フロントエンド） */
+.ksiv-image-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.ksiv-zoom-icon {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background: rgba(0, 0, 0, 0.65);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.ksiv-image-wrapper:hover .ksiv-zoom-icon {
+    opacity: 1;
+}
+
+.ksiv-zoom-icon svg {
+    width: 18px;
+    height: 18px;
+    color: #fff;
+}
+
+/* 画像単位での位置 */
+.ksiv-zoom-icon.position-bottom-right {
+    bottom: 8px;
+    right: 8px;
+}
+
+.ksiv-zoom-icon.position-bottom-left {
+    bottom: 8px;
+    left: 8px;
+}
+
+.ksiv-zoom-icon.position-top-right {
+    top: 8px;
+    right: 8px;
+}
+
+.ksiv-zoom-icon.position-top-left {
+    top: 8px;
+    left: 8px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .ksiv-lightbox-content {
+        padding: 70px 10px;
+    }
+
+    .ksiv-lightbox-nav {
+        width: 40px;
+        height: 60px;
+    }
+
+    .ksiv-lightbox-nav svg {
+        width: 30px;
+        height: 30px;
+    }
+
+    .ksiv-lightbox-prev {
+        left: 5px;
+    }
+
+    .ksiv-lightbox-next {
+        right: 5px;
+    }
+
+    .ksiv-lightbox-image-wrapper {
+        max-width: calc(100% - 80px);
+    }
+
+    .ksiv-lightbox-info-panel {
+        min-width: 280px;
+        padding: 12px 16px;
+        bottom: 100px;
+    }
+
+    .ksiv-lightbox-header {
+        padding: 12px 16px;
+    }
+
+    .ksiv-lightbox-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .ksiv-lightbox-counter {
+        font-size: 14px;
+    }
+
+    .ksiv-lightbox-zoom-controls {
+        bottom: 15px;
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ksiv-lightbox-info-panel {
+        min-width: auto;
+        width: calc(100% - 32px);
+        left: 16px;
+        right: 16px;
+        transform: translateY(20px);
+    }
+
+    .ksiv-lightbox-info-panel.is-visible {
+        transform: translateY(0);
+    }
+
+    .ksiv-lightbox-info-row {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .ksiv-lightbox-info-value {
+        text-align: left;
+    }
+}
+
+/* キーボードフォーカス */
+.ksiv-lightbox-btn:focus-visible,
+.ksiv-lightbox-nav:focus-visible,
+.ksiv-lightbox-copy-url:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* 単独画像の場合、ナビゲーションを非表示 */
+.ksiv-lightbox.is-single .ksiv-lightbox-nav {
+    display: none;
+}
+
+.ksiv-lightbox.is-single .ksiv-lightbox-counter {
+    display: none;
+}
+
+/* アニメーション無効設定への対応 */
+@media (prefers-reduced-motion: reduce) {
+    .ksiv-lightbox-overlay,
+    .ksiv-lightbox-container,
+    .ksiv-lightbox-info-panel,
+    .ksiv-lightbox-image,
+    .ksiv-lightbox-btn,
+    .ksiv-lightbox-nav,
+    .ksiv-zoom-icon,
+    .ksiv-lightbox-copy-feedback {
+        transition: none;
+    }
+
+    .ksiv-lightbox-spinner {
+        animation: none;
+    }
+}
