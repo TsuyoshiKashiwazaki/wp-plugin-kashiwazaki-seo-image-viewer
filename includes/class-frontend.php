@@ -45,6 +45,55 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
     }
 
     /**
+     * 現在のページでLightboxを有効にするかチェック
+     */
+    private function should_enable_lightbox(): bool {
+        $page_types = $this->settings->get('lightbox_page_types', []);
+
+        // 投稿ページ
+        if (!empty($page_types['single']) && is_single()) {
+            return true;
+        }
+
+        // 固定ページ
+        if (!empty($page_types['page']) && is_page()) {
+            return true;
+        }
+
+        // アーカイブページ
+        if (!empty($page_types['archive']) && is_archive()) {
+            return true;
+        }
+
+        // フロントページ（静的フロントページまたは投稿一覧がフロントページの場合）
+        if (!empty($page_types['front_page']) && is_front_page()) {
+            return true;
+        }
+
+        // ホームページ（投稿一覧ページ、ただしフロントページでない場合）
+        if (!empty($page_types['home']) && is_home() && !is_front_page()) {
+            return true;
+        }
+
+        // 検索結果ページ
+        if (!empty($page_types['search']) && is_search()) {
+            return true;
+        }
+
+        // 添付ファイルページ（画像詳細ページ）
+        if (!empty($page_types['attachment']) && is_attachment()) {
+            return true;
+        }
+
+        // 404エラーページ
+        if (!empty($page_types['404']) && is_404()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * AJAX: 画像情報を取得
      */
     public function ajax_get_image_info(): void {
@@ -215,7 +264,7 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
      * アセットを読み込み
      */
     public function enqueue_assets(): void {
-        if (!is_singular()) {
+        if (!$this->should_enable_lightbox()) {
             return;
         }
 
@@ -268,7 +317,7 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
      * コンテンツを処理
      */
     public function process_content(string $content): string {
-        if (!is_singular()) {
+        if (!$this->should_enable_lightbox()) {
             return $content;
         }
 
@@ -348,7 +397,7 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
      * Lightboxテンプレートを出力
      */
     public function render_lightbox_template(): void {
-        if (!is_singular()) {
+        if (!$this->should_enable_lightbox()) {
             return;
         }
 

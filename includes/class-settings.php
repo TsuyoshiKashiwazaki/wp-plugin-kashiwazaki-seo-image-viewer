@@ -32,6 +32,16 @@ class Kashiwazaki_SEO_Image_Viewer_Settings {
         return [
             // Lightbox設定
             'lightbox_enabled' => true,
+            'lightbox_page_types' => [
+                'single' => true,      // 投稿ページ
+                'page' => true,        // 固定ページ
+                'archive' => false,    // アーカイブページ
+                'home' => false,       // ホームページ（投稿一覧）
+                'front_page' => false, // フロントページ
+                'search' => false,     // 検索結果
+                'attachment' => false, // 添付ファイルページ
+                '404' => false,        // 404ページ
+            ],
             'show_zoom_icon' => true,
             'zoom_icon_position' => 'bottom-right',
             'max_zoom_ratio' => 300,
@@ -94,6 +104,16 @@ class Kashiwazaki_SEO_Image_Viewer_Settings {
 
         // Lightbox設定
         $sanitized['lightbox_enabled'] = !empty($settings['lightbox_enabled']);
+        $sanitized['lightbox_page_types'] = [
+            'single' => !empty($settings['lightbox_page_types']['single']),
+            'page' => !empty($settings['lightbox_page_types']['page']),
+            'archive' => !empty($settings['lightbox_page_types']['archive']),
+            'home' => !empty($settings['lightbox_page_types']['home']),
+            'front_page' => !empty($settings['lightbox_page_types']['front_page']),
+            'search' => !empty($settings['lightbox_page_types']['search']),
+            'attachment' => !empty($settings['lightbox_page_types']['attachment']),
+            '404' => !empty($settings['lightbox_page_types']['404']),
+        ];
         $sanitized['show_zoom_icon'] = !empty($settings['show_zoom_icon']);
         $sanitized['zoom_icon_position'] = in_array(
             $settings['zoom_icon_position'] ?? '',

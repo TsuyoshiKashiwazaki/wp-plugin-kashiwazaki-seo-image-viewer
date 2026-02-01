@@ -5,6 +5,19 @@
 フォーマットは[Keep a Changelog](https://keepachangelog.com/ja/1.0.0/)に基づいており、
 [セマンティックバージョニング](https://semver.org/lang/ja/)に準拠しています。
 
+## [1.0.1] - 2026-02-01
+
+### 追加
+- Lightbox適用ページタイプ設定機能
+  - 投稿ページ
+  - 固定ページ
+  - アーカイブページ（カテゴリー、タグ、日付別など）
+  - ホームページ（投稿一覧）
+  - フロントページ（トップページ）
+  - 検索結果ページ
+  - 添付ファイルページ（画像詳細ページ）
+  - 404エラーページ
+
 ## [1.0.0] - 2026-01-25
 
 ### 追加
@@ -27,4 +40,5 @@
 - ソート可能な投稿/固定ページ一覧のSEOスコアカラム
 - 設定へのプラグインアクションリンク
 
-[1.0.0]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.0-dev
+[1.0.1]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.1-dev
+[1.0.0]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.0

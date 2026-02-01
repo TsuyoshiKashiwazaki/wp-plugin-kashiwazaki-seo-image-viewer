@@ -195,6 +195,46 @@ class Kashiwazaki_SEO_Image_Viewer_Admin {
                                 </td>
                             </tr>
                             <tr>
+                                <th scope="row"><?php esc_html_e('適用するページタイプ', 'kashiwazaki-seo-image-viewer'); ?></th>
+                                <td>
+                                    <fieldset>
+                                        <label style="display: block; margin-bottom: 5px;">
+                                            <input type="checkbox" name="ksiv_settings[lightbox_page_types][single]" value="1" <?php checked($settings['lightbox_page_types']['single'] ?? false); ?>>
+                                            <?php esc_html_e('投稿ページ', 'kashiwazaki-seo-image-viewer'); ?>
+                                        </label>
+                                        <label style="display: block; margin-bottom: 5px;">
+                                            <input type="checkbox" name="ksiv_settings[lightbox_page_types][page]" value="1" <?php checked($settings['lightbox_page_types']['page'] ?? false); ?>>
+                                            <?php esc_html_e('固定ページ', 'kashiwazaki-seo-image-viewer'); ?>
+                                        </label>
+                                        <label style="display: block; margin-bottom: 5px;">
+                                            <input type="checkbox" name="ksiv_settings[lightbox_page_types][archive]" value="1" <?php checked($settings['lightbox_page_types']['archive'] ?? false); ?>>
+                                            <?php esc_html_e('アーカイブページ（カテゴリー、タグ、日付別など）', 'kashiwazaki-seo-image-viewer'); ?>
+                                        </label>
+                                        <label style="display: block; margin-bottom: 5px;">
+                                            <input type="checkbox" name="ksiv_settings[lightbox_page_types][home]" value="1" <?php checked($settings['lightbox_page_types']['home'] ?? false); ?>>
+                                            <?php esc_html_e('ホームページ（投稿一覧）', 'kashiwazaki-seo-image-viewer'); ?>
+                                        </label>
+                                        <label style="display: block; margin-bottom: 5px;">
+                                            <input type="checkbox" name="ksiv_settings[lightbox_page_types][front_page]" value="1" <?php checked($settings['lightbox_page_types']['front_page'] ?? false); ?>>
+                                            <?php esc_html_e('フロントページ（トップページ）', 'kashiwazaki-seo-image-viewer'); ?>
+                                        </label>
+                                        <label style="display: block; margin-bottom: 5px;">
+                                            <input type="checkbox" name="ksiv_settings[lightbox_page_types][search]" value="1" <?php checked($settings['lightbox_page_types']['search'] ?? false); ?>>
+                                            <?php esc_html_e('検索結果ページ', 'kashiwazaki-seo-image-viewer'); ?>
+                                        </label>
+                                        <label style="display: block; margin-bottom: 5px;">
+                                            <input type="checkbox" name="ksiv_settings[lightbox_page_types][attachment]" value="1" <?php checked($settings['lightbox_page_types']['attachment'] ?? false); ?>>
+                                            <?php esc_html_e('添付ファイルページ（画像詳細ページ）', 'kashiwazaki-seo-image-viewer'); ?>
+                                        </label>
+                                        <label style="display: block; margin-bottom: 5px;">
+                                            <input type="checkbox" name="ksiv_settings[lightbox_page_types][404]" value="1" <?php checked($settings['lightbox_page_types']['404'] ?? false); ?>>
+                                            <?php esc_html_e('404エラーページ', 'kashiwazaki-seo-image-viewer'); ?>
+                                        </label>
+                                    </fieldset>
+                                    <p class="description"><?php esc_html_e('Lightboxを有効にするページの種類を選択してください。', 'kashiwazaki-seo-image-viewer'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th scope="row"><?php esc_html_e('拡大アイコンの表示', 'kashiwazaki-seo-image-viewer'); ?></th>
                                 <td>
                                     <label>
