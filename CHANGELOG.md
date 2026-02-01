@@ -5,6 +5,11 @@
 フォーマットは[Keep a Changelog](https://keepachangelog.com/ja/1.0.0/)に基づいており、
 [セマンティックバージョニング](https://semver.org/lang/ja/)に準拠しています。
 
+## [1.0.2] - 2026-02-01
+
+### 修正
+- 画像情報取得時のnonce検証を削除（キャッシュ環境での互換性向上）
+
 ## [1.0.1] - 2026-02-01
 
 ### 追加
@@ -40,5 +45,6 @@
 - ソート可能な投稿/固定ページ一覧のSEOスコアカラム
 - 設定へのプラグインアクションリンク
 
-[1.0.1]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.1-dev
+[1.0.2]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.2-dev
+[1.0.1]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.1
 [1.0.0]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.0

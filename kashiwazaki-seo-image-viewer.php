@@ -3,7 +3,7 @@
  * Plugin Name: Kashiwazaki SEO Image Viewer
  * Plugin URI: https://www.tsuyoshikashiwazaki.jp
  * Description: A lightweight WordPress plugin that combines an elegant Lightbox image viewer with comprehensive image SEO diagnostics. Analyzes alt attributes, filenames, dimensions, file sizes, and next-gen format (WebP/AVIF) support to calculate an overall image SEO score for each post.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: 柏崎剛 (Tsuyoshi Kashiwazaki)
  * Author URI: https://www.tsuyoshikashiwazaki.jp/profile/
  * License: GPL v2 or later
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // プラグイン定数
-define('KSIV_VERSION', '1.0.1');
+define('KSIV_VERSION', '1.0.2');
 define('KSIV_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('KSIV_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('KSIV_PLUGIN_BASENAME', plugin_basename(__FILE__));

@@ -97,8 +97,6 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
      * AJAX: 画像情報を取得
      */
     public function ajax_get_image_info(): void {
-        check_ajax_referer('ksiv_frontend_nonce', 'nonce');
-
         $src = isset($_POST['src']) ? esc_url_raw($_POST['src']) : '';
 
         if (empty($src)) {
