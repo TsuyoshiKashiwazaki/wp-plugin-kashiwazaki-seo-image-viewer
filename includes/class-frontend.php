@@ -130,10 +130,10 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
             'mime_type' => '',
         ];
 
-        // URLからファイル名を取得
+        // URLからファイル名を取得（URLデコードして日本語ファイル名に対応）
         $parsed_url = wp_parse_url($src);
         $path = $parsed_url['path'] ?? '';
-        $info['filename'] = basename($path);
+        $info['filename'] = urldecode(basename($path));
         $info['extension'] = strtolower(pathinfo($info['filename'], PATHINFO_EXTENSION));
 
         // アップロードディレクトリ情報
@@ -145,6 +145,9 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
 
             // クエリ文字列を除去
             $file_path = preg_replace('/\?.*$/', '', $file_path);
+
+            // URLエンコードされた日本語ファイル名をデコード
+            $file_path = urldecode($file_path);
 
             if (file_exists($file_path)) {
                 $info['filesize'] = filesize($file_path);

@@ -4,7 +4,7 @@ Tags: lightbox, image viewer, seo, image optimization, webp
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,9 @@ Kashiwazaki SEO Image Viewerは、画像管理に必須の2つの機能を組み
 4. 設定ページ
 
 == Changelog ==
+
+= 1.0.3 =
+* URLエンコードされた日本語ファイル名の画像でファイルサイズが取得できない問題を修正
 
 = 1.0.2 =
 * 画像情報取得時のnonce検証を削除（キャッシュ環境での互換性向上）

@@ -5,6 +5,11 @@
 フォーマットは[Keep a Changelog](https://keepachangelog.com/ja/1.0.0/)に基づいており、
 [セマンティックバージョニング](https://semver.org/lang/ja/)に準拠しています。
 
+## [1.0.3] - 2026-02-02
+
+### 修正
+- URLエンコードされた日本語ファイル名の画像でファイルサイズ・画像サイズが取得できない問題を修正
+
 ## [1.0.2] - 2026-02-01
 
 ### 修正
@@ -45,6 +50,7 @@
 - ソート可能な投稿/固定ページ一覧のSEOスコアカラム
 - 設定へのプラグインアクションリンク
 
-[1.0.2]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.2-dev
+[1.0.3]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.3-dev
+[1.0.2]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.2
 [1.0.1]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.1
 [1.0.0]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.0
