@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像ビューアー・SEO診断 - Kashiwazaki SEO Image Viewer マニュアル</title>
+    <link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+    <button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color:#fff;">Image Viewer</h2>
+            <span class="version">v1.0.3</span>
+            <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+        </div>
+        <ul>
+            <li><a href="index.html">概要</a></li>
+            <li><a href="setup.html">インストール・初期設定</a></li>
+            <li><a href="image-viewer-usage.html">画像ビューアー・SEO診断</a></li>
+            <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+        </ul>
+    </nav>
+    <main class="content">
+        <h1>画像ビューアー・SEO診断</h1>
+
+        <p class="lead">Lightbox画像ビューアーの操作方法と、画像SEO診断機能の使い方を解説します。</p>
+
+        <h2>Lightbox画像ビューアー</h2>
+
+        <p>フロントエンドの投稿ページで画像をクリックすると、ズーム・ナビゲーション付きのLightboxが表示されます。</p>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <div class="step-body">
+                <p>投稿ページ内の画像をクリックしてLightboxを開く</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <div class="step-body">
+                <p>左右の矢印キーまたはナビゲーションボタンで前後の画像に移動</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <div class="step-body">
+                <p>ズームボタンまたはマウスホイールで拡大・縮小</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <div class="step-body">
+                <p>オーバーレイのクリックまたはEscキーでLightboxを閉じる</p>
+            </div>
+        </div>
+
+        <div class="callout callout-tip">
+            <p>Lightboxはタッチデバイスにも対応しており、スワイプ操作で画像の切り替えが可能です。</p>
+        </div>
+
+        <h2>画像SEO診断</h2>
+
+        <p>投稿内の画像に対して、以下の項目を自動診断します。</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">診断項目</th>
+                    <th>説明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>alt属性</td>
+                    <td>alt属性の有無と内容の適切さを検証</td>
+                </tr>
+                <tr>
+                    <td>ファイル名品質</td>
+                    <td>画像ファイル名が意味のあるキーワードを含んでいるか評価</td>
+                </tr>
+                <tr>
+                    <td>画像サイズ</td>
+                    <td>画像の幅・高さが適切な範囲にあるか確認</td>
+                </tr>
+                <tr>
+                    <td>次世代フォーマット</td>
+                    <td>WebP/AVIF形式への対応状況を検出</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>SEOスコアの算出</h2>
+
+        <p>各診断項目の結果を総合し、投稿ごとに画像SEOスコア（0〜100）を算出します。</p>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <div class="step-body">
+                <p>投稿の編集画面を開くか、投稿一覧でスコアカラムを確認</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <div class="step-body">
+                <p>スコアが低い投稿は、診断結果を確認して画像を最適化</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <div class="step-body">
+                <p>投稿一覧のスコアカラムヘッダーをクリックして、スコア順にソート</p>
+            </div>
+        </div>
+
+        <div class="callout callout-warning">
+            <p>画像のないページではスコアは表示されません。また、外部URLの画像はファイル名品質のみ診断され、サイズチェックは行われません。</p>
+        </div>
+
+        <nav class="page-nav">
+            <a href="setup.html" class="prev">&laquo; インストール・初期設定</a>
+            <a href="troubleshooting.html" class="next">トラブルシューティング &raquo;</a>
+        </nav>
+
+        <footer class="manual-footer">
+            <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+            <p>プラグイン: Kashiwazaki SEO Image Viewer v1.0.3</p>
+        </footer>
+    </main>
+
+    <div class="lightbox"></div>
+
+    <script src="js/manual.js?v=1"></script>
+</body>
+</html>

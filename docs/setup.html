@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インストール・初期設定 - Kashiwazaki SEO Image Viewer マニュアル</title>
+    <link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+    <button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color:#fff;">Image Viewer</h2>
+            <span class="version">v1.0.3</span>
+            <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+        </div>
+        <ul>
+            <li><a href="index.html">概要</a></li>
+            <li><a href="setup.html">インストール・初期設定</a></li>
+            <li><a href="image-viewer-usage.html">画像ビューアー・SEO診断</a></li>
+            <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+        </ul>
+    </nav>
+    <main class="content">
+        <h1>インストール・初期設定</h1>
+
+        <p class="lead">プラグインのインストールから初期設定まで、ステップバイステップで解説します。</p>
+
+        <h2>インストール手順</h2>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <div class="step-body">
+                <p>プラグインファイルを <code>/wp-content/plugins/kashiwazaki-seo-image-viewer/</code> にアップロード</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <div class="step-body">
+                <p>WordPress管理画面「プラグイン」から有効化</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <div class="step-body">
+                <p>左メニューに「Kashiwazaki SEO Image Viewer」が追加される</p>
+            </div>
+        </div>
+
+        <figure class="screenshot">
+            <img src="images/screenshots/00-menu-location.png" alt="管理画面メニューの位置" class="lightbox-trigger">
+            <figcaption>管理画面の左メニューにプラグインが追加されます</figcaption>
+        </figure>
+
+        <div class="callout callout-tip">
+            <p>有効化後、フロントエンドの画像に自動的にLightbox機能が適用されます。設定ページで動作のカスタマイズが可能です。</p>
+        </div>
+
+        <h2>設定ページ</h2>
+
+        <p>設定ページでは、Lightbox表示と画像SEO診断の動作をカスタマイズできます。</p>
+
+        <h2>管理画面カラム</h2>
+
+        <p>投稿一覧に画像SEOスコアのカラムが自動追加されます。カラムヘッダーをクリックしてスコア順にソートできます。</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%;">カラム</th>
+                    <th>説明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>画像SEOスコア</td>
+                    <td>投稿内の全画像を診断し算出したスコア（0〜100）</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout callout-note">
+            <p>スコアは投稿の保存・更新時に自動計算されます。既存の投稿は画像ビューアーページから一括診断を実行できます。</p>
+        </div>
+
+        <nav class="page-nav">
+            <a href="index.html" class="prev">&laquo; 概要</a>
+            <a href="image-viewer-usage.html" class="next">画像ビューアー・SEO診断 &raquo;</a>
+        </nav>
+
+        <footer class="manual-footer">
+            <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+            <p>プラグイン: Kashiwazaki SEO Image Viewer v1.0.3</p>
+        </footer>
+    </main>
+
+    <div class="lightbox"></div>
+
+    <script src="js/manual.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>概要 - Kashiwazaki SEO Image Viewer マニュアル</title>
+    <link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+    <button class="hamburger-btn" aria-label="メニューを開く">&#9776;</button>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color:#fff;">Image Viewer</h2>
+            <span class="version">v1.0.3</span>
+            <img src="images/main-visual.png" alt="" style="width:100%;border-radius:4px;margin-top:8px;">
+        </div>
+        <ul>
+            <li><a href="index.html">概要</a></li>
+            <li><a href="setup.html">インストール・初期設定</a></li>
+            <li><a href="image-viewer-usage.html">画像ビューアー・SEO診断</a></li>
+            <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+        </ul>
+    </nav>
+    <main class="content">
+        <h1>Kashiwazaki SEO Image Viewer マニュアル</h1>
+
+        <img src="images/main-visual.png" alt="Image Viewer メインビジュアル" style="width:100%; border-radius:8px; margin-bottom:24px;">
+
+        <p class="lead">WordPress投稿内の画像をLightbox表示し、画像SEO診断（alt属性・ファイル名・サイズ・次世代フォーマット対応）を自動実行するプラグインです。投稿ごとの画像SEOスコアを算出し、管理画面カラムで確認・ソートできます。</p>
+
+        <p>本プラグインはフロントエンドにLightbox画像ビューアーを提供するとともに、管理画面で画像SEOの診断結果とスコアを表示します。JSON-LDやmetaタグの出力は行いません。フロントエンド出力: CSS 24KB、JS 36KB。</p>
+
+        <section>
+            <h2>主要機能</h2>
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <h3>Lightbox表示</h3>
+                    <p>画像クリックでズーム・ナビゲーション付きのLightboxを表示</p>
+                </div>
+                <div class="feature-card">
+                    <h3>SEO診断</h3>
+                    <p>alt属性・ファイル名・サイズ・次世代フォーマット対応を自動チェック</p>
+                </div>
+                <div class="feature-card">
+                    <h3>スコア表示</h3>
+                    <p>投稿ごとの画像SEOスコアを算出し管理画面カラムに表示</p>
+                </div>
+            </div>
+        </section>
+
+        <figure class="infographic">
+            <img src="images/infographics/overview-flow.png" alt="プラグインの全体ワークフロー" class="lightbox-trigger">
+            <figcaption>図: プラグインの全体ワークフロー</figcaption>
+        </figure>
+
+        <section>
+            <h2>目次</h2>
+            <ul>
+                <li><a href="index.html">概要</a> - プラグインの概要と主要機能の紹介</li>
+                <li><a href="setup.html">インストール・初期設定</a> - インストール手順と初期設定の方法</li>
+                <li><a href="image-viewer-usage.html">画像ビューアー・SEO診断</a> - Lightbox表示と画像SEO診断の使い方</li>
+                <li><a href="troubleshooting.html">トラブルシューティング</a> - よくある問題と解決方法</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>SEO / GEO における強み</h2>
+
+            <p>本プラグインはJSON-LDやmetaタグの出力は行いませんが、画像SEO診断を通じて、SEOおよびGEO（Generative Engine Optimization）の改善に役立つ情報を提供します。</p>
+
+            <h3>画像SEO診断によるSEO改善</h3>
+            <p>画像SEO診断は、alt属性の欠落を検出します。alt属性はアクセシビリティと画像検索の両面で重要な要素であり、未設定の画像を素早く特定して対策の優先順位を判断できます。</p>
+
+            <h3>ファイル名品質の評価</h3>
+            <p>画像ファイル名の品質は画像検索のランキングに影響します。本プラグインはファイル名が適切なキーワードを含んでいるか、意味のある名前になっているかを診断し、改善を促します。</p>
+
+            <h3>次世代フォーマットの検出</h3>
+            <p>WebP/AVIF形式の検出により、次世代画像フォーマットへの対応状況を把握できます。次世代フォーマットの採用はページ読み込み速度の向上に貢献し、Core Web Vitalsの改善につながります。</p>
+
+            <h3>GEOへの応用可能性</h3>
+            <p>GEO（Generative Engine Optimization）の観点では、AIは画像のalt属性を参照して画像の内容を理解します。適切なalt属性の設定は、AI引用における画像コンテンツの正確な把握に貢献します。画像SEOスコアにより最適化の優先順位を効率的に判断できます。</p>
+        </section>
+
+        <section>
+            <h2>動作要件</h2>
+            <ul>
+                <li>WordPress 6.0 以上</li>
+                <li>PHP 7.4 以上</li>
+            </ul>
+        </section>
+
+        <nav class="page-nav">
+            <span></span>
+            <a href="setup.html" class="next">インストール・初期設定 &raquo;</a>
+        </nav>
+
+        <footer class="manual-footer">
+            <p>作者: <a href="https://www.tsuyoshikashiwazaki.jp/profile/" target="_blank" rel="noopener">柏崎剛（Tsuyoshi Kashiwazaki）</a></p>
+            <p>プラグイン: Kashiwazaki SEO Image Viewer v1.0.3</p>
+        </footer>
+    </main>
+
+    <div class="lightbox"></div>
+
+    <script src="js/manual.js?v=1"></script>
+</body>
+</html>
