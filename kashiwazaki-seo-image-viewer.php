@@ -3,7 +3,7 @@
  * Plugin Name: Kashiwazaki SEO Image Viewer
  * Plugin URI: https://www.tsuyoshikashiwazaki.jp
  * Description: A lightweight WordPress plugin that combines an elegant Lightbox image viewer with comprehensive image SEO diagnostics. Analyzes alt attributes, filenames, dimensions, file sizes, and next-gen format (WebP/AVIF) support to calculate an overall image SEO score for each post.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: 柏崎剛 (Tsuyoshi Kashiwazaki)
  * Author URI: https://www.tsuyoshikashiwazaki.jp/profile/
  * License: GPL v2 or later
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // プラグイン定数
-define('KSIV_VERSION', '1.0.3');
+define('KSIV_VERSION', '1.0.4');
 define('KSIV_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('KSIV_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('KSIV_PLUGIN_BASENAME', plugin_basename(__FILE__));
@@ -158,6 +158,20 @@ final class Kashiwazaki_SEO_Image_Viewer {
             dirname(KSIV_PLUGIN_BASENAME) . '/languages'
         );
     }
+}
+
+/**
+ * アセットのキャッシュバスター付きバージョン文字列を取得
+ *
+ * ファイル更新時刻を付与することで、プラグインのバージョン番号が同じでも
+ * ファイル内容が変われば enqueue の URL（?ver=）が必ず変わり、CDN・ブラウザの
+ * 古いキャッシュを確実に無効化する。filemtime が取得できない環境では
+ * プラグインバージョンにフォールバックする。
+ */
+function ksiv_asset_ver(string $relative_path): string {
+    $abs = KSIV_PLUGIN_DIR . ltrim($relative_path, '/');
+    $mtime = @filemtime($abs);
+    return $mtime ? KSIV_VERSION . '.' . $mtime : KSIV_VERSION;
 }
 
 /**

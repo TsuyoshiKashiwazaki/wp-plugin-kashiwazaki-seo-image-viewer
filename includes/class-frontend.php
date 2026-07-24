@@ -39,15 +39,21 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
         add_filter('the_content', [$this, 'process_content'], 20);
         add_action('wp_footer', [$this, 'render_lightbox_template']);
 
-        // フロントエンド用AJAXハンドラー
-        add_action('wp_ajax_ksiv_get_image_info', [$this, 'ajax_get_image_info']);
-        add_action('wp_ajax_nopriv_ksiv_get_image_info', [$this, 'ajax_get_image_info']);
+        // フロントエンド用AJAXハンドラー（管理画面側と衝突しないよう別アクション名を使う）
+        add_action('wp_ajax_ksiv_front_image_info', [$this, 'ajax_get_image_info']);
+        add_action('wp_ajax_nopriv_ksiv_front_image_info', [$this, 'ajax_get_image_info']);
     }
 
     /**
      * 現在のページでLightboxを有効にするかチェック
      */
     private function should_enable_lightbox(): bool {
+        // 管理画面・フィード・AJAX・REST など非HTML表示コンテキストでは無効化する
+        // （the_content が feed/REST から呼ばれた際の不要な DOM 往復・属性付与を防ぐ）
+        if (is_admin() || is_feed() || wp_doing_ajax() || (defined('REST_REQUEST') && REST_REQUEST)) {
+            return false;
+        }
+
         $page_types = $this->settings->get('lightbox_page_types', []);
 
         // 投稿ページ
@@ -97,10 +103,26 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
      * AJAX: 画像情報を取得
      */
     public function ajax_get_image_info(): void {
-        $src = isset($_POST['src']) ? esc_url_raw($_POST['src']) : '';
+        // nonce 検証は行わない（キャッシュ環境での互換性のため。対象は
+        // アップロード配下の公開画像のサイズ照会に限定し、下でパスを検証する）
+        $src = isset($_POST['src']) ? esc_url_raw(wp_unslash($_POST['src'])) : '';
 
         if (empty($src)) {
             wp_send_json_error(['message' => __('画像URLが指定されていません。', 'kashiwazaki-seo-image-viewer')]);
+        }
+
+        // パストラバーサルを含む URL は即拒否（../ , ..\ , エンコード形）
+        $decoded_src = urldecode($src);
+        if (preg_match('#(?:^|[/\\\\])\.\.(?:[/\\\\]|$)#', $decoded_src)) {
+            wp_send_json_error(['message' => __('対象外の画像です。', 'kashiwazaki-seo-image-viewer')]);
+        }
+
+        // アップロードディレクトリ配下の画像のみを対象にする（任意パス探索の防止）
+        $upload_dir = wp_upload_dir();
+        if (empty($upload_dir['baseurl']) || strpos($src, $upload_dir['baseurl']) !== 0) {
+            if (!attachment_url_to_postid($src)) {
+                wp_send_json_error(['message' => __('対象外の画像です。', 'kashiwazaki-seo-image-viewer')]);
+            }
         }
 
         $file_info = $this->get_image_file_info($src);
@@ -115,6 +137,33 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
             'mime_type' => $file_info['mime_type'],
             'format_name' => $this->get_format_name($file_info['mime_type']),
         ]);
+    }
+
+    /**
+     * 解決済みファイルパスがアップロードディレクトリ配下に収まっているか検証
+     * （../ や %2e エンコードによるパストラバーサルでの任意ファイル参照を防ぐ）
+     */
+    private function is_within_uploads(string $file_path, array $upload_dir): bool {
+        if (empty($upload_dir['basedir'])) {
+            return false;
+        }
+
+        $base_real = realpath($upload_dir['basedir']);
+        if ($base_real === false) {
+            return false;
+        }
+
+        // 実体が無い場合でも親ディレクトリ基準で正規化して判定する
+        $target_real = realpath($file_path);
+        if ($target_real === false) {
+            $target_real = realpath(dirname($file_path));
+            if ($target_real === false) {
+                return false;
+            }
+        }
+
+        $base_real = rtrim($base_real, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        return strpos($target_real . DIRECTORY_SEPARATOR, $base_real) === 0;
     }
 
     /**
@@ -149,7 +198,7 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
             // URLエンコードされた日本語ファイル名をデコード
             $file_path = urldecode($file_path);
 
-            if (file_exists($file_path)) {
+            if ($this->is_within_uploads($file_path, $upload_dir) && file_exists($file_path)) {
                 $info['filesize'] = filesize($file_path);
                 $info['mime_type'] = $this->get_mime_type_from_extension($info['extension']);
 
@@ -273,14 +322,14 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
             'ksiv-lightbox',
             KSIV_PLUGIN_URL . 'assets/css/lightbox.css',
             [],
-            KSIV_VERSION
+            ksiv_asset_ver('assets/css/lightbox.css')
         );
 
         wp_enqueue_script(
             'ksiv-lightbox',
             KSIV_PLUGIN_URL . 'assets/js/lightbox.js',
             [],
-            KSIV_VERSION,
+            ksiv_asset_ver('assets/js/lightbox.js'),
             true
         );
 
@@ -306,6 +355,7 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
                 'copyUrl' => __('URLをコピー', 'kashiwazaki-seo-image-viewer'),
                 'copied' => __('コピーしました', 'kashiwazaki-seo-image-viewer'),
                 'loading' => __('読み込み中...', 'kashiwazaki-seo-image-viewer'),
+                'loadError' => __('画像を読み込めませんでした', 'kashiwazaki-seo-image-viewer'),
                 'zoomIn' => __('拡大', 'kashiwazaki-seo-image-viewer'),
                 'zoomOut' => __('縮小', 'kashiwazaki-seo-image-viewer'),
             ],
@@ -327,16 +377,22 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
             return $content;
         }
 
+        // DOM 拡張が無い環境では Fatal を避けて素通しする
+        if (!class_exists('DOMDocument')) {
+            return $content;
+        }
+
         // DOMDocumentを使用して正確に処理
         $dom = new \DOMDocument();
 
-        // エラーを抑制しつつHTMLをロード
-        libxml_use_internal_errors(true);
+        // エラーを抑制しつつHTMLをロード（従前の libxml 状態は後で復元する）
+        $libxml_previous_state = libxml_use_internal_errors(true);
         $dom->loadHTML(
             '<?xml encoding="UTF-8"><div id="ksiv-wrapper">' . $content . '</div>',
             LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
         );
         libxml_clear_errors();
+        libxml_use_internal_errors($libxml_previous_state);
 
         // 全ての画像要素を取得
         $images = $dom->getElementsByTagName('img');
@@ -350,6 +406,14 @@ class Kashiwazaki_SEO_Image_Viewer_Frontend {
         foreach ($images_to_process as $img) {
             // すでに処理済みの場合はスキップ
             if ($img->hasAttribute('data-ksiv-image') || $img->hasAttribute('data-ksiv-linked')) {
+                continue;
+            }
+
+            // カバーブロック等の背景画像は本文画像ではないため Lightbox 対象にしない
+            // （クリックで開く／カウンター水増しを防ぐ。wrap除外と同じ判断を適用）
+            $img_class = $img->getAttribute('class');
+            if ($img_class !== '' && strpos($img_class, 'wp-block-cover__image-background') !== false) {
+                $img->setAttribute('data-ksiv-linked', '');
                 continue;
             }
 

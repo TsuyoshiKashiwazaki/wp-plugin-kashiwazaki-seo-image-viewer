@@ -47,7 +47,28 @@
             if (pattern === '') return;
 
             try {
-                new RegExp(pattern);
+                // PHP PCRE 形式（区切り文字 + flags）を JS RegExp に変換して検証する。
+                // 区切り文字込みのまま new RegExp に渡すと実際とは別の式を検査してしまう。
+                // これはクライアント側の目安チェック（PCRE 固有構文は JS で完全検証できない。
+                // サーバー側は @preg_match で最終検証する）。
+                var delim = pattern.charAt(0);
+                var isDelimited = pattern.length >= 2 &&
+                    '/#~!%|@'.indexOf(delim) !== -1 &&
+                    pattern.lastIndexOf(delim) > 0;
+
+                if (isDelimited) {
+                    var close = pattern.lastIndexOf(delim);
+                    var body = pattern.substring(1, close);
+                    var rawFlags = pattern.substring(close + 1);
+                    // JS がサポートするフラグ (i,m,s,u,y,g) のみ残し、重複は除去する
+                    // （PCRE は重複修飾子を許すが JS の RegExp は SyntaxError になるため）
+                    var jsFlags = (rawFlags.match(/[imsuyg]/g) || [])
+                        .filter(function(f, i, a) { return a.indexOf(f) === i; })
+                        .join('');
+                    new RegExp(body, jsFlags);
+                } else {
+                    new RegExp(pattern);
+                }
             } catch (e) {
                 invalidPatterns.push({
                     line: index + 1,

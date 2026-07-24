@@ -41,7 +41,9 @@
     let translateY = 0;
     let lastTranslateX = 0;
     let lastTranslateY = 0;
-    let animationSpeed = settings.animationSpeed || 300;
+    let animationSpeed = (settings.animationSpeed !== undefined && settings.animationSpeed !== null)
+        ? settings.animationSpeed
+        : 300;
 
     // タッチ用
     let lastTouchDistance = 0;
@@ -94,7 +96,7 @@
 
         targetImages.forEach((img, index) => {
             images.push({
-                src: img.currentSrc || img.src,
+                src: resolveImageSrc(img),
                 alt: img.alt || '',
                 element: img
             });
@@ -113,11 +115,40 @@
     }
 
     /**
+     * 画像の実URLを解決する
+     * EWWW等の遅延読込では初期srcがdata:プレースホルダになるため、
+     * data-src-img / data-orig-file 等の実URL属性を優先する。
+     */
+    function resolveImageSrc(img) {
+        const candidates = [
+            img.getAttribute('data-src-img'),   // EWWW
+            img.getAttribute('data-orig-file'), // EWWW
+            img.getAttribute('data-src'),       // lazysizes / 汎用遅延読込
+            img.getAttribute('data-lazy-src'),  // WP Rocket / 汎用
+            img.currentSrc,
+            img.getAttribute('src')
+        ];
+        for (let i = 0; i < candidates.length; i++) {
+            const c = candidates[i];
+            if (c && c.indexOf('data:') !== 0) {
+                return c;
+            }
+        }
+        return img.currentSrc || img.src || '';
+    }
+
+    /**
      * 画像を虫眼鏡アイコン付きラッパーで囲む
      */
     function wrapImageWithIcon(img) {
         // すでにラッパーで囲まれている場合はスキップ
         if (img.parentElement.classList.contains('ksiv-image-wrapper')) {
+            return;
+        }
+
+        // カバーブロック等の絶対配置背景画像はラップしない
+        // （ラッパーが包含ブロックになり width/height:100% が 0x0 に潰れるため）
+        if (img.classList.contains('wp-block-cover__image-background')) {
             return;
         }
 
@@ -242,6 +273,14 @@
         loadingElement.classList.add('is-active');
         imageElement.classList.add('is-loading');
 
+        // 表示直前に実URLを再解決（EWWW等が収集後にsrcを差し替えるため）
+        if (image.element) {
+            const resolved = resolveImageSrc(image.element);
+            if (resolved) {
+                image.src = resolved;
+            }
+        }
+
         // 画像を読み込み
         imageElement.src = image.src;
         imageElement.alt = image.alt;
@@ -275,7 +314,7 @@
     function handleImageError() {
         loadingElement.classList.remove('is-active');
         imageElement.classList.remove('is-loading');
-        imageElement.alt = i18n.loading || 'Loading error';
+        imageElement.alt = i18n.loadError || 'Failed to load image';
     }
 
     /**
@@ -614,7 +653,7 @@
         }
 
         const formData = new FormData();
-        formData.append('action', 'ksiv_get_image_info');
+        formData.append('action', 'ksiv_front_image_info');
         formData.append('nonce', config.nonce);
         formData.append('src', src);
 

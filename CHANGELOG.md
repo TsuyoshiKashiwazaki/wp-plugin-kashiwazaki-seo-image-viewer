@@ -5,6 +5,28 @@
 フォーマットは[Keep a Changelog](https://keepachangelog.com/ja/1.0.0/)に基づいており、
 [セマンティックバージョニング](https://semver.org/lang/ja/)に準拠しています。
 
+## [1.0.4] - 2026-07-24
+
+### 修正
+- カバーブロックなどの背景画像が0×0に潰れて表示されない不具合を修正
+- 遅延読込（EWWW Image Optimizer等）環境で、画像拡大時にプレースホルダーを掴んで正しく表示されない不具合を修正
+- 設定保存時にファイル名警告パターン（正規表現）のバックスラッシュが壊れる不具合を修正
+- 画像情報取得のAJAXアクション名が管理画面側と衝突していた問題を修正
+- DOM拡張が無い環境で発生する致命的エラーを回避
+- アニメーション速度を0msに設定しても反映されない不具合を修正
+- 画像読み込み失敗時に代替テキストが「読み込み中」と誤表示される問題を修正
+
+### 変更
+- 容量診断を、実際に配信される次世代フォーマット（WebP/AVIF）のファイルサイズ基準に改善
+- 管理画面のファイル名パターン検証を、区切り文字付き正規表現に対応するよう改善
+- 背景画像（カバーブロック）を拡大表示の対象外に変更
+- フィード・REST・AJAXなど非表示コンテキストでの不要な本文処理を抑制
+- CSS/JSの読み込みにファイル更新時刻を付与し、更新時にキャッシュが確実に反映されるよう改善
+
+### セキュリティ
+- 画像情報取得処理のパス検証を強化し、アップロードディレクトリ配下に限定
+- 管理画面のAJAX処理に権限チェックを追加
+
 ## [1.0.3] - 2026-02-02
 
 ### 修正
@@ -50,7 +72,8 @@
 - ソート可能な投稿/固定ページ一覧のSEOスコアカラム
 - 設定へのプラグインアクションリンク
 
-[1.0.3]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.3-dev
+[1.0.4]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.4-dev
+[1.0.3]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.3
 [1.0.2]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.2
 [1.0.1]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.1
 [1.0.0]: https://github.com/TsuyoshiKashiwazaki/wp-plugin-kashiwazaki-seo-image-viewer/releases/tag/v1.0.0

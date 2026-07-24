@@ -161,6 +161,9 @@ class Kashiwazaki_SEO_Image_Viewer_SEO_Checker {
             'extension' => $file_info['extension'],
             'delivered_format' => $delivered_format,
             'filesize' => $file_info['filesize'],
+            'delivered_filesize' => in_array($delivered_format, self::NEXT_GEN_FORMATS, true)
+                ? $this->get_delivered_filesize($src, $delivered_format)
+                : 0,
             'actual_width' => $file_info['width'],
             'actual_height' => $file_info['height'],
             'mime_type' => $file_info['mime_type'],
@@ -218,6 +221,75 @@ class Kashiwazaki_SEO_Image_Viewer_SEO_Checker {
     }
 
     /**
+     * 実際に配信される次世代フォーマット(WebP/AVIF)ファイルの容量を取得
+     * （EWWW等の変換済みファイルが存在する場合、元画像ではなくその容量を診断に使う）
+     */
+    private function get_delivered_filesize(string $src, string $delivered_format = 'webp'): int {
+        $upload_dir = wp_upload_dir();
+        if (empty($upload_dir['baseurl']) || strpos($src, $upload_dir['baseurl']) !== 0) {
+            return 0;
+        }
+
+        $file_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $src);
+        $file_path = preg_replace('/\?.*$/', '', $file_path);
+        // URLエンコードされた日本語ファイル名に対応
+        $file_path = urldecode($file_path);
+
+        // 実際に配信される形式を優先して探索する（AVIF 配信時に WebP を返さない）
+        $ext = strtolower($delivered_format) === 'avif' ? ['avif', 'webp'] : ['webp', 'avif'];
+
+        $candidates = [];
+        $pathinfo = pathinfo($file_path);
+        foreach ($ext as $e) {
+            $candidates[] = $file_path . '.' . $e; // image.png.webp
+            if (isset($pathinfo['dirname'], $pathinfo['filename'])) {
+                $candidates[] = $pathinfo['dirname'] . '/' . $pathinfo['filename'] . '.' . $e; // image.webp
+            }
+        }
+
+        $base_real = realpath($upload_dir['basedir']);
+        foreach ($candidates as $candidate) {
+            if (!file_exists($candidate)) {
+                continue;
+            }
+            // アップロード配下に収まっているか検証（パストラバーサル防止）
+            $real = realpath($candidate);
+            if ($base_real !== false && $real !== false
+                && strpos($real . DIRECTORY_SEPARATOR, rtrim($base_real, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) === 0) {
+                return (int) filesize($candidate);
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * 解決済みファイルパスがアップロードディレクトリ配下に収まっているか検証
+     * （../ や %2e エンコードによるパストラバーサルでの任意ファイル参照を防ぐ）
+     */
+    private function is_within_uploads(string $file_path, array $upload_dir): bool {
+        if (empty($upload_dir['basedir'])) {
+            return false;
+        }
+
+        $base_real = realpath($upload_dir['basedir']);
+        if ($base_real === false) {
+            return false;
+        }
+
+        $target_real = realpath($file_path);
+        if ($target_real === false) {
+            $target_real = realpath(dirname($file_path));
+            if ($target_real === false) {
+                return false;
+            }
+        }
+
+        $base_real = rtrim($base_real, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        return strpos($target_real . DIRECTORY_SEPARATOR, $base_real) === 0;
+    }
+
+    /**
      * サーバー上に次世代フォーマット版のファイルが存在するかチェック
      */
     private function check_next_gen_file_exists(string $src): ?string {
@@ -230,18 +302,20 @@ class Kashiwazaki_SEO_Image_Viewer_SEO_Checker {
             return null;
         }
 
-        // ファイルパスに変換
+        // ファイルパスに変換（クエリ除去 + 日本語ファイル名の urldecode）
         $file_path = str_replace($base_url, $base_dir, $src);
+        $file_path = preg_replace('/\?.*$/', '', $file_path);
+        $file_path = urldecode($file_path);
 
         // WebP版のファイルが存在するかチェック（.png.webp, .jpg.webp など）
         $webp_path = $file_path . '.webp';
-        if (file_exists($webp_path)) {
+        if ($this->is_within_uploads($webp_path, $upload_dir) && file_exists($webp_path)) {
             return 'webp';
         }
 
         // AVIF版のファイルが存在するかチェック
         $avif_path = $file_path . '.avif';
-        if (file_exists($avif_path)) {
+        if ($this->is_within_uploads($avif_path, $upload_dir) && file_exists($avif_path)) {
             return 'avif';
         }
 
@@ -249,12 +323,12 @@ class Kashiwazaki_SEO_Image_Viewer_SEO_Checker {
         $pathinfo = pathinfo($file_path);
         if (isset($pathinfo['dirname']) && isset($pathinfo['filename'])) {
             $webp_alt_path = $pathinfo['dirname'] . '/' . $pathinfo['filename'] . '.webp';
-            if (file_exists($webp_alt_path)) {
+            if ($this->is_within_uploads($webp_alt_path, $upload_dir) && file_exists($webp_alt_path)) {
                 return 'webp';
             }
 
             $avif_alt_path = $pathinfo['dirname'] . '/' . $pathinfo['filename'] . '.avif';
-            if (file_exists($avif_alt_path)) {
+            if ($this->is_within_uploads($avif_alt_path, $upload_dir) && file_exists($avif_alt_path)) {
                 return 'avif';
             }
         }
@@ -320,9 +394,11 @@ class Kashiwazaki_SEO_Image_Viewer_SEO_Checker {
 
             // ローカルファイルの場合はファイル情報を取得
             $upload_dir = wp_upload_dir();
-            if (strpos($src, $upload_dir['baseurl']) === 0) {
+            if (!empty($upload_dir['baseurl']) && strpos($src, $upload_dir['baseurl']) === 0) {
                 $file_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $src);
-                if (file_exists($file_path)) {
+                $file_path = preg_replace('/\?.*$/', '', $file_path);
+                $file_path = urldecode($file_path);
+                if ($this->is_within_uploads($file_path, $upload_dir) && file_exists($file_path)) {
                     $info['filesize'] = filesize($file_path);
                     $image_size = wp_getimagesize($file_path);
                     if ($image_size) {
@@ -467,18 +543,21 @@ class Kashiwazaki_SEO_Image_Viewer_SEO_Checker {
      * ファイル容量をチェック
      */
     private function check_filesize(array $image): ?array {
-        if ($image['filesize'] <= 0) {
+        // 実際に配信されるWebP/AVIFがあればその容量で診断する（元画像ではなく）
+        $filesize = !empty($image['delivered_filesize']) ? $image['delivered_filesize'] : $image['filesize'];
+
+        if ($filesize <= 0) {
             return null;
         }
 
         $threshold = $this->settings->get('filesize_warning_threshold', 500) * 1024;
 
-        if ($image['filesize'] >= $threshold) {
+        if ($filesize >= $threshold) {
             return [
                 'type' => 'filesize_oversized',
                 'message' => sprintf(
                     __('ファイルサイズが大きすぎます（%s）', 'kashiwazaki-seo-image-viewer'),
-                    $this->format_filesize($image['filesize'])
+                    $this->format_filesize($filesize)
                 ),
                 'severity' => 'warning',
             ];

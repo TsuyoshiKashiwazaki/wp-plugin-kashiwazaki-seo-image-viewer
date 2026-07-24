@@ -4,7 +4,7 @@ Tags: lightbox, image viewer, seo, image optimization, webp
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,19 @@ Kashiwazaki SEO Image Viewerは、画像管理に必須の2つの機能を組み
 4. 設定ページ
 
 == Changelog ==
+
+= 1.0.4 =
+* カバーブロックなどの背景画像が表示されない不具合を修正
+* 遅延読込環境で画像拡大時にプレースホルダーを掴む不具合を修正
+* 設定保存時にファイル名警告パターン（正規表現）が壊れる不具合を修正
+* 画像情報取得AJAXの管理画面側との衝突を修正
+* DOM拡張が無い環境での致命的エラーを回避
+* アニメーション速度0msが反映されない不具合を修正
+* 画像読み込み失敗時の代替テキスト誤表示を修正
+* 容量診断を配信形式（WebP/AVIF）基準に改善
+* 背景画像を拡大表示の対象外に変更
+* 画像情報取得のパス検証強化・管理AJAXの権限チェック追加
+* CSS/JSの読み込みにファイル更新時刻を付与しキャッシュ反映を確実化
 
 = 1.0.3 =
 * URLエンコードされた日本語ファイル名の画像でファイルサイズが取得できない問題を修正

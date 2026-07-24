@@ -99,14 +99,14 @@ class Kashiwazaki_SEO_Image_Viewer_Admin {
                 'ksiv-admin',
                 KSIV_PLUGIN_URL . 'assets/css/admin.css',
                 [],
-                KSIV_VERSION
+                ksiv_asset_ver('assets/css/admin.css')
             );
 
             wp_enqueue_script(
                 'ksiv-admin',
                 KSIV_PLUGIN_URL . 'assets/js/admin.js',
                 [],
-                KSIV_VERSION,
+                ksiv_asset_ver('assets/js/admin.js'),
                 true
             );
         }
@@ -118,14 +118,14 @@ class Kashiwazaki_SEO_Image_Viewer_Admin {
                 'ksiv-admin',
                 KSIV_PLUGIN_URL . 'assets/css/admin.css',
                 [],
-                KSIV_VERSION
+                ksiv_asset_ver('assets/css/admin.css')
             );
 
             wp_enqueue_script(
                 'ksiv-admin',
                 KSIV_PLUGIN_URL . 'assets/js/admin.js',
                 [],
-                KSIV_VERSION,
+                ksiv_asset_ver('assets/js/admin.js'),
                 true
             );
 
@@ -144,7 +144,7 @@ class Kashiwazaki_SEO_Image_Viewer_Admin {
             return;
         }
 
-        if (!wp_verify_nonce($_POST['ksiv_settings_nonce'], 'ksiv_save_settings')) {
+        if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['ksiv_settings_nonce'])), 'ksiv_save_settings')) {
             return;
         }
 
@@ -152,7 +152,11 @@ class Kashiwazaki_SEO_Image_Viewer_Admin {
             return;
         }
 
-        $this->settings->save($_POST['ksiv_settings'] ?? []);
+        // wp_unslash で WordPress が付与したスラッシュを除去してから保存する。
+        // 未除去だと filename_warning_patterns の正規表現 (例: /^IMG_\d+/i) の
+        // バックスラッシュが保存の度に増殖してパターンが壊れる。
+        $raw_settings = isset($_POST['ksiv_settings']) ? wp_unslash($_POST['ksiv_settings']) : [];
+        $this->settings->save(is_array($raw_settings) ? $raw_settings : []);
 
         add_settings_error(
             'ksiv_settings',
@@ -644,7 +648,12 @@ class Kashiwazaki_SEO_Image_Viewer_Admin {
     public function ajax_get_image_info(): void {
         check_ajax_referer('ksiv_admin_nonce', 'nonce');
 
-        $src = isset($_POST['src']) ? esc_url_raw($_POST['src']) : '';
+        // nonce は認可ではないため capability も確認する
+        if (!current_user_can('edit_posts')) {
+            wp_send_json_error(['message' => __('権限がありません。', 'kashiwazaki-seo-image-viewer')]);
+        }
+
+        $src = isset($_POST['src']) ? esc_url_raw(wp_unslash($_POST['src'])) : '';
 
         if (empty($src)) {
             wp_send_json_error(['message' => __('画像URLが指定されていません。', 'kashiwazaki-seo-image-viewer')]);
